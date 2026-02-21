@@ -288,6 +288,29 @@ If you're using this module in conjunction with Fastly and are concerned about c
 
 This ensures that content warmed by the Cache Warmer module will be available from multiple Fastly edge nodes, maximizing both cache effectiveness and user experience.
 
+## Sitemap Configuration for Robots.txt
+
+To enable sitemap.xml submission in robots.txt file for better search engine indexing, follow one of these methods:
+
+### Method 1: Using Configuration Settings (Recommended)
+
+1. Log in to your Magento 2 Admin Panel
+2. Navigate to Stores > Settings > Configuration
+3. Select Catalog and open the XML Sitemap tab
+4. Expand the Search Engine Submission Settings section
+5. Set Enable Submission to Robots.txt to Yes
+6. Click Save Config
+
+### Method 2: Customizing robots.txt
+
+If you need to add a specific or custom sitemap URL:
+
+1. Go to Content > Design > Configuration
+2. Select your theme and click Edit
+3. Under Search Engine Robots, find the Edit custom instruction of robots.txt File field
+4. Add Sitemap: [your-sitemap-url] (e.g., Sitemap: https://example.com/pub/sitemap.xml) to the field
+5. Save the configuration
+
 ## Usage
 
 ### Manual Execution
@@ -374,6 +397,8 @@ All operations are logged to `/var/log/the_cache_warmer.log`. The logs include:
 - Python 3.x with `requests` library installed
 - Write access to media directory for CSV file generation
 - Proper permissions on nginx access log files
+
+> **Note**: In most hosting environments, Python 3 is already installed by default. If it's not available, you'll need to install it via your system's package manager (e.g., `apt-get install python3` on Debian/Ubuntu or `yum install python3` on CentOS/RHEL). The `requests` library is required and can be installed using pip: `pip3 install requests`.
 
 ## Ignored User Agents Feature
 

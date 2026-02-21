@@ -80,8 +80,8 @@ class SitemapParser
                         continue;
                     }
 
-                    // Attempt to fetch the sitemap XML
-                    $xmlContent = file_get_contents($sitemapUrl);
+                    // Fetch sitemap XML content
+                    $xmlContent = $this->fetchFileContent($sitemapUrl);
 
                     if ($xmlContent === false) {
                         $this->logger->warning("Failed to fetch sitemap for store ID {$storeId}: {$sitemapUrl}");
@@ -117,10 +117,17 @@ class SitemapParser
                         continue;
                     }
 
-                    // Create CSV file path
+                    // Create CSV file path and ensure directory exists
                     $mediaPath = $this->directoryList->getPath(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA);
+                    $csvDirectory = rtrim($mediaPath, '/') . '/cacheWarmerCsvFiles/';
+
+                    // Ensure the directory exists
+                    if (!is_dir($csvDirectory)) {
+                        mkdir($csvDirectory, 0755, true);
+                    }
+
                     $csvFileName = "sitemap_urls_store_{$storeId}_" . date('Y-m-d_H-i-s') . '.csv';
-                    $csvFilePath = rtrim($mediaPath, '/') . '/cacheWarmerCsvFiles/' . $csvFileName;
+                    $csvFilePath = $csvDirectory . $csvFileName;
 
                     // Create CSV file
                     $csvHandle = fopen($csvFilePath, 'w');
@@ -167,25 +174,8 @@ class SitemapParser
             // Construct robots.txt URL
             $robotsUrl = rtrim($baseUrl, '/') . '/robots.txt';
 
-            // Check if we're in developer mode to determine SSL context
-            $isDeveloperMode = $this->appState->getMode() === \Magento\Framework\App\State::MODE_DEVELOPER;
-
-            if ($isDeveloperMode) {
-                // In developer mode, use custom stream context with SSL verification disabled
-                $arrContextOptions = array(
-                    "ssl" => array(
-                        "allow_self_signed" => true,
-                        "verify_peer" => false,
-                        "verify_peer_name" => false,
-                    ),
-                );
-                $streamContext = stream_context_create($arrContextOptions);
-                // Fetch robots.txt content
-                $robotsContent = file_get_contents($robotsUrl, false, $streamContext);
-            } else {
-                // In production mode, use standard file_get_contents
-                $robotsContent = file_get_contents($robotsUrl);
-            }
+            // Fetch robots.txt content using common method
+            $robotsContent = $this->fetchFileContent($robotsUrl);
 
             if ($robotsContent === false) {
                 return null;
@@ -211,6 +201,40 @@ class SitemapParser
                 ]
             );
             return null;
+        }
+    }
+
+    /**
+     * Fetch content from URL with appropriate SSL context based on developer mode
+     *
+     * @param string $url The URL to fetch content from
+     * @return string|false Content or false if failed
+     */
+    private function fetchFileContent(string $url)
+    {
+        try {
+            // Check if we're in developer mode to determine SSL context
+            $isDeveloperMode = $this->appState->getMode() === \Magento\Framework\App\State::MODE_DEVELOPER;
+
+            if ($isDeveloperMode) {
+                // In developer mode, use custom stream context with SSL verification disabled
+                $arrContextOptions = array(
+                    "ssl" => array(
+                        "allow_self_signed" => true,
+                        "verify_peer" => false,
+                        "verify_peer_name" => false,
+                    ),
+                );
+                $streamContext = stream_context_create($arrContextOptions);
+                // Fetch content with custom context
+                return file_get_contents($url, false, $streamContext);
+            } else {
+                // In production mode, use standard file_get_contents
+                return file_get_contents($url);
+            }
+        } catch (\Exception $e) {
+            $this->logger->warning("Failed to fetch content from URL: {$url}. Error: " . $e->getMessage());
+            return false;
         }
     }
 
