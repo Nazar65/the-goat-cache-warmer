@@ -2,6 +2,8 @@
   <img src="images/goat.jpg" alt="Goat Logo" width="200"/>
 </p>
 
+[![Python Unit Tests](https://github.com/Nazar65/the-goat-cache-warmer/actions/workflows/python-tests-pipeline.yml/badge.svg)](https://github.com/Nazar65/the-goat-cache-warmer/actions/workflows/python-tests-pipeline.yml)
+
 # The Cache Warmer Module
 
 ## Overview
