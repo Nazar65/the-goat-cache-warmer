@@ -1,10 +1,11 @@
 {
+    "license": "GPL-3.0-or-later",
     "require": {
-        "magento/framework": "*",
-        "php": "~8.1||~8.2"
+        "magento/framework": "^2.4.0",
+        "php": "~8.1||~8.2||~8.3"
     },
     "description": "Magento 2 module for caching website pages using Python warmer script",
-    "version": "1.0.0",
+    "version": "V1.0.2",
     "type": "magento2-module",
     "name": "goat/the-cache-warmer",
     "autoload": {

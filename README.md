@@ -33,7 +33,15 @@ The module works by analyzing nginx access logs and sitemap data to identify pop
                        ↓
                [CacheWarmer Model] → [Python Warmer Script]
                        ↓
-            [Message Queue Consumer (optional)]
+                [Magento Cache Warmup]
+
+[sitemap.xml] → [Sitemap Parser] → [CSV Generation] →
+                       ↓
+               [CacheWarmer Model] → [Python Warmer Script]
+                       ↓
+                [Magento Cache Warmup]
+
+[custom CSV files] → [Direct CSV Input] → [CacheWarmer Model] → [Python Warmer Script]
                        ↓
                 [Magento Cache Warmup]
 ```
@@ -44,12 +52,17 @@ The module works by analyzing nginx access logs and sitemap data to identify pop
 2. **WarmupFromSitemap Cron Job**: Processes sitemaps to generate CSV files for cache warming
 3. **WarmupFromConfig Cron Job**: Uses configured CSV files for warmup operations
 4. **UrlParser Service**: Extracts page URLs from nginx access log, filters out non-page resources
-5. **CacheWarmer Model**: Executes the Python warming script with configured parameters
-6. **Message Queue System**: Allows for asynchronous cache warmup execution via queue consumers
-7. **Console Commands**: Manual execution capabilities through CLI commands
-8. **Admin Configuration**: Provides interface to configure paths, timeout settings, and schedules
+5. **Sitemap Parser**: Parses XML sitemap files to extract product/category pages and other important URLs
+6. **CacheWarmer Model**: Executes the Python warming script with configured parameters
+7. **Message Queue System**: Allows for asynchronous cache warmup execution via queue consumers
+8. **Console Commands**: Manual execution capabilities through CLI commands
+9. **Admin Configuration**: Provides interface to configure paths, timeout settings, and schedules
 
 ## Installation
+
+There are two ways to install the Cache Warmer module:
+
+### Method 1: Manual Installation (Legacy)
 
 1. Copy module files to `app/code/Goat/TheCacheWarmer/`
 2. Run the following commands in your Magento root directory:
@@ -59,6 +72,21 @@ The module works by analyzing nginx access logs and sitemap data to identify pop
    bin/magento setup:upgrade
    bin/magento cache:flush
    ```
+
+### Method 2: Composer Installation (Recommended)
+
+Install directly from Packagist using Composer:
+
+```bash
+composer require goat/the-cache-warmer:dev-master
+```
+
+After installation via Composer, run:
+
+```bash
+bin/magento setup:upgrade
+bin/magento cache:flush
+```
 
 ## Performance Improvements & Core Web Vitals (CWV) Results
 
