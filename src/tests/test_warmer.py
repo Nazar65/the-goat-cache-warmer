@@ -1,9 +1,11 @@
 import unittest
 from unittest.mock import patch, mock_open, MagicMock
 import sys
+import os
 
 # Add the src directory to Python path so we can import the module
-sys.path.insert(0, '/home/nazar/Projects/sharkgaming/app/code/Goat/TheCacheWarmer/src')
+current_working_directory = os.getcwd()
+sys.path.insert(0, "./src")
 
 try:
     from warmer import (
@@ -13,7 +15,7 @@ try:
         load_config_from_json,
         extract_base_url_from_config,
         extract_base_url_from_url,
-        match_urls_by_base_url
+        match_urls_by_base_url,
     )
 except ImportError as e:
     print(f"Failed to import: {e}")
@@ -21,8 +23,7 @@ except ImportError as e:
 
 
 class TestWarmURL(unittest.TestCase):
-
-    @patch('requests.get')
+    @patch("requests.get")
     def test_warm_url_success(self, mock_get):
         """Test successful URL warming with cache HIT"""
         # Setup mock response
@@ -38,7 +39,7 @@ class TestWarmURL(unittest.TestCase):
         self.assertEqual(result["x_cache"], "HIT")
         self.assertIsNone(result["error"])
 
-    @patch('requests.get')
+    @patch("requests.get")
     def test_warm_url_success_miss(self, mock_get):
         """Test successful URL warming with cache MISS"""
         # Setup mock response
@@ -53,7 +54,7 @@ class TestWarmURL(unittest.TestCase):
         self.assertEqual(result["status"], 200)
         self.assertEqual(result["x_cache"], "MISS")
 
-    @patch('requests.get')
+    @patch("requests.get")
     def test_warm_url_exception(self, mock_get):
         """Test URL warming when request fails"""
         # Setup mock to raise exception
@@ -68,12 +69,11 @@ class TestWarmURL(unittest.TestCase):
 
 
 class TestReadURLsFromCSV(unittest.TestCase):
-
     def test_read_urls_from_csv_success(self):
         """Test reading URLs from CSV file"""
         csv_content = "http://example.com/page1\nhttp://example.com/page2\n"
 
-        with patch('builtins.open', mock_open(read_data=csv_content)):
+        with patch("builtins.open", mock_open(read_data=csv_content)):
             urls = read_urls_from_csv("test.csv")
 
         self.assertEqual(urls, ["http://example.com/page1", "http://example.com/page2"])
@@ -82,14 +82,14 @@ class TestReadURLsFromCSV(unittest.TestCase):
         """Test reading URLs from CSV with empty rows"""
         csv_content = "http://example.com/page1\n\nhttp://example.com/page2\n   \n"
 
-        with patch('builtins.open', mock_open(read_data=csv_content)):
+        with patch("builtins.open", mock_open(read_data=csv_content)):
             urls = read_urls_from_csv("test.csv")
 
         self.assertEqual(urls, ["http://example.com/page1", "http://example.com/page2"])
 
     def test_read_urls_from_csv_file_not_found(self):
         """Test reading from non-existent CSV file"""
-        with patch('builtins.open', side_effect=FileNotFoundError()):
+        with patch("builtins.open", side_effect=FileNotFoundError()):
             urls = read_urls_from_csv("nonexistent.csv")
 
         self.assertEqual(urls, [])
@@ -98,7 +98,7 @@ class TestReadURLsFromCSV(unittest.TestCase):
         """Test reading from CSV with invalid content"""
         csv_content = "invalid content that causes error"
 
-        with patch('builtins.open', mock_open(read_data=csv_content)):
+        with patch("builtins.open", mock_open(read_data=csv_content)):
             urls = read_urls_from_csv("test.csv")
 
         # Should return empty list on any exception
@@ -106,8 +106,7 @@ class TestReadURLsFromCSV(unittest.TestCase):
 
 
 class TestProcessURLsThreaded(unittest.TestCase):
-
-    @patch('requests.get')
+    @patch("requests.get")
     def test_process_urls_threaded_sequential(self, mock_get):
         """Test sequential processing of URLs"""
         # Setup mock response
@@ -124,7 +123,7 @@ class TestProcessURLsThreaded(unittest.TestCase):
             timeout=50,
             custom_headers=None,
             custom_cookies={},
-            use_threads=False
+            use_threads=False,
         )
 
         self.assertEqual(len(results), 2)
@@ -132,7 +131,7 @@ class TestProcessURLsThreaded(unittest.TestCase):
             self.assertTrue(result["success"])
             self.assertEqual(result["status"], 200)
 
-    @patch('requests.get')
+    @patch("requests.get")
     def test_process_urls_threaded_parallel(self, mock_get):
         """Test parallel processing of URLs"""
         # Setup mock response
@@ -149,7 +148,7 @@ class TestProcessURLsThreaded(unittest.TestCase):
             timeout=50,
             custom_headers=None,
             custom_cookies={},
-            use_threads=True
+            use_threads=True,
         )
 
         self.assertEqual(len(results), 2)
@@ -159,20 +158,19 @@ class TestProcessURLsThreaded(unittest.TestCase):
 
 
 class TestLoadConfigFromJSON(unittest.TestCase):
-
     def test_load_config_from_json_success(self):
         """Test loading valid JSON configuration"""
         config_data = [
             {
                 "name": "test",
                 "website_base_url": "http://example.com",
-                "headers": {"User-Agent": "test"}
+                "headers": {"User-Agent": "test"},
             }
         ]
 
         json_content = '{"name": "test", "website_base_url": "http://example.com", "headers": {"User-Agent": "test"}}'
 
-        with patch('builtins.open', mock_open(read_data=json_content)):
+        with patch("builtins.open", mock_open(read_data=json_content)):
             # This requires more careful handling since the function uses sys.exit
             try:
                 configs = load_config_from_json("test.json")
@@ -192,7 +190,7 @@ class TestLoadConfigFromJSON(unittest.TestCase):
 
         json_content = '[{"name": "test"}]'
 
-        with patch('builtins.open', mock_open(read_data=json_content)):
+        with patch("builtins.open", mock_open(read_data=json_content)):
             try:
                 configs = load_config_from_json("test.json")
                 self.assertEqual(len(configs), 1)
@@ -201,7 +199,7 @@ class TestLoadConfigFromJSON(unittest.TestCase):
 
     def test_load_config_from_json_file_not_found(self):
         """Test loading configuration from non-existent file"""
-        with patch('builtins.open', side_effect=FileNotFoundError()):
+        with patch("builtins.open", side_effect=FileNotFoundError()):
             try:
                 configs = load_config_from_json("nonexistent.json")
                 self.assertEqual(configs, [])
@@ -212,7 +210,7 @@ class TestLoadConfigFromJSON(unittest.TestCase):
         """Test loading invalid JSON"""
         json_content = '{"invalid": json}'
 
-        with patch('builtins.open', mock_open(read_data=json_content)):
+        with patch("builtins.open", mock_open(read_data=json_content)):
             try:
                 configs = load_config_from_json("test.json")
                 self.assertEqual(configs, [])
@@ -221,21 +219,16 @@ class TestLoadConfigFromJSON(unittest.TestCase):
 
 
 class TestExtractBaseURL(unittest.TestCase):
-
     def test_extract_base_url_from_config_with_protocol(self):
         """Test extracting base URL from config with protocol"""
-        config = {
-            "website_base_url": "http://example.com:8080/path"
-        }
+        config = {"website_base_url": "http://example.com:8080/path"}
 
         result = extract_base_url_from_config(config)
         self.assertEqual(result, "example.com:8080")
 
     def test_extract_base_url_from_config_without_protocol(self):
         """Test extracting base URL from config without protocol"""
-        config = {
-            "website_base_url": "example.com/path"
-        }
+        config = {"website_base_url": "example.com/path"}
 
         result = extract_base_url_from_config(config)
         self.assertEqual(result, "example.com")
@@ -269,18 +262,15 @@ class TestExtractBaseURL(unittest.TestCase):
 
 
 class TestMatchURLsByBaseURL(unittest.TestCase):
-
     def test_match_urls_by_base_url_success(self):
         """Test matching URLs by base domain"""
         urls = [
             "http://example.com/page1",
             "http://example.com/page2",
-            "http://other.com/page3"
+            "http://other.com/page3",
         ]
 
-        config = {
-            "website_base_url": "http://example.com"
-        }
+        config = {"website_base_url": "http://example.com"}
 
         matched_urls = match_urls_by_base_url(urls, config)
         self.assertEqual(len(matched_urls), 2)
@@ -290,29 +280,21 @@ class TestMatchURLsByBaseURL(unittest.TestCase):
 
     def test_match_urls_by_base_url_no_match(self):
         """Test matching when no URLs match base domain"""
-        urls = [
-            "http://example.com/page1",
-            "http://example.com/page2"
-        ]
+        urls = ["http://example.com/page1", "http://example.com/page2"]
 
-        config = {
-            "website_base_url": "http://other.com"
-        }
+        config = {"website_base_url": "http://other.com"}
 
         matched_urls = match_urls_by_base_url(urls, config)
         self.assertEqual(len(matched_urls), 0)
 
     def test_match_urls_by_base_url_no_website_base_url(self):
         """Test matching when no website base URL in config"""
-        urls = [
-            "http://example.com/page1",
-            "http://example.com/page2"
-        ]
+        urls = ["http://example.com/page1", "http://example.com/page2"]
 
         config = {}
 
         matched_urls = match_urls_by_base_url(urls, config)
-        self.assertEqual(len(matched_urls), 2) # Should return all URLs
+        self.assertEqual(len(matched_urls), 2)  # Should return all URLs
 
     def test_match_urls_by_base_url_empty_inputs(self):
         """Test matching with empty inputs"""
@@ -323,6 +305,5 @@ class TestMatchURLsByBaseURL(unittest.TestCase):
         self.assertEqual(len(matched_urls), 1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
-
