@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @var \Goat\TheCacheWarmer\Block\Adminhtml\System\Config\Form\Field\PreviewButton $block
+ */
+$element = $block->getElement();
+?>
+
+<button type="button" id="preview_config" class="action-default">
+    <?= $block->escapeHtml(__('Preview Config File')) ?>
+</button>
+<script>
+    require([
+        'jquery',
+        'Magento_Ui/js/modal/modal'
+    ], function($, modal) {
+        $('#goat_cache_warmer_general_preview_config').css('display', 'none');
+        $('#preview_config').on('click', function(e) {
+            e.preventDefault();
+
+            // Get the path to config file from the hidden field or configuration
+            var configOptionField = $('#goat_cache_warmer_general_config_option');
+            var configPath = configOptionField.attr('value');
+
+            if (!configPath) {
+                alert('No configuration file selected.');
+                return;
+            }
+
+            // Show modal with content of the config file
+            $.ajax({
+                url: '<?= $block->getPreviewUrl('goat_cache_warmer/config/preview') ?>',
+                type: 'GET',
+                data: {
+                    'file_path': configPath
+                },
+                success: function(response) {
+                    if (response.error) {
+                        alert(response.error);
+                        return;
+                    }
+
+                    var modalContent = '<div class="modal-content">' +
+                        '<pre>' + response.content.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + '</pre>' +
+                        '</div>';
+
+                    modal({
+                        title: 'Configuration File Preview',
+                        autoOpen: true,
+                        buttons: [{
+                            text: $.mage.__('Close'),
+                            class: 'action-secondary',
+                            click: function() {
+                                this.closeModal();
+                            }
+                        }]
+                    }, $(modalContent));
+                },
+                error: function(xhr, status, error) {
+                    alert('Error loading configuration file content.');
+                }
+            });
+        });
+    });
+</script>

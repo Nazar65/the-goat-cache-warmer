@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) 2026 TheGoat team. All rights reserved.
+ * See https://example.com/license for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/topology.xsd">
+    <exchange name="magento-db" type="topic" connection="db">
+        <binding id="processCacheWarmup"
+                 topic="cache.warmup"
+                 destinationType="queue"
+                 destination="cache.warmup"/>
+    </exchange>
+</config>
+

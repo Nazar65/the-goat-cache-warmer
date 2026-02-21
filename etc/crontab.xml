@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) 2026 TheGoat team. All rights reserved.
+ * See https://example.com/license for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="warmup_from_nginx_logs"
+             instance="Goat\\TheCacheWarmer\\Cron\\WarmupFromNginx"
+            method="execute">
+            <config_path>cache_warmer/cron/from_nginx_schedule</config_path>
+        </job>
+        <job name="warmup_from_sitemap"
+             instance="Goat\\TheCacheWarmer\\Cron\\WarmupFromSitemap"
+            method="execute">
+            <config_path>cache_warmer/cron/from_sitemap_schedule</config_path>
+        </job>
+        <job name="warmup_from_config"
+             instance="Goat\\TheCacheWarmer\\Cron\\WarmupFromConfig"
+            method="execute">
+            <config_path>cache_warmer/cron/from_config_schedule</config_path>
+        </job>
+    </group>
+</config>
+

@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) 2026 TheGoat team. All rights reserved.
+ * See https://example.com/license for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Goat\TheCacheWarmer\Api\CacheWarmerInterface" type="Goat\TheCacheWarmer\Model\CacheWarmer"/>
+    <preference for="Goat\TheCacheWarmer\Api\UrlParserInterface" type="Goat\TheCacheWarmer\Service\UrlParser"/>
+
+    <type name="Goat\TheCacheWarmer\Cron\WarmupFromConfig">
+        <arguments>
+            <argument name="logger" xsi:type="object">Goat\TheCacheWarmer\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <type name="Goat\TheCacheWarmer\Cron\WarmupFromSitemap">
+        <arguments>
+            <argument name="logger" xsi:type="object">Goat\TheCacheWarmer\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <type name="Goat\TheCacheWarmer\Cron\WarmupFromNginx">
+        <arguments>
+            <argument name="logger" xsi:type="object">Goat\TheCacheWarmer\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Goat\TheCacheWarmer\MessageQueue\Consumer\CacheWarmup">
+        <arguments>
+            <argument name="logger" xsi:type="object">Goat\TheCacheWarmer\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <type name="Goat\TheCacheWarmer\Cron\WarmupCommand">
+        <arguments>
+            <argument name="logger" xsi:type="object">Goat\TheCacheWarmer\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <type name="Goat\TheCacheWarmer\Service\SitemapParser">
+        <arguments>
+            <argument name="logger" xsi:type="object">Goat\TheCacheWarmer\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <type name="Goat\TheCacheWarmer\Model\CacheWarmer">
+        <arguments>
+            <argument name="logger" xsi:type="object">Goat\TheCacheWarmer\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <type name="Goat\TheCacheWarmer\Service\UrlCsvGenerator">
+        <arguments>
+            <argument name="logger" xsi:type="object">Goat\TheCacheWarmer\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <type name="Goat\TheCacheWarmer\Service\UrlParser">
+        <arguments>
+            <argument name="logger" xsi:type="object">Goat\TheCacheWarmer\Logger\Logger</argument>
+                <argument name="excludePatterns" xsi:type="array">
+                    <item name="media" xsi:type="string">/^\/media\//</item>
+                    <item name="skin" xsi:type="string">/^\/skin\//</item>
+                    <item name="js" xsi:type="string">/^\/js\//</item>
+                    <item name="css" xsi:type="string">/^\/css\//</item>
+                    <item name="favicon" xsi:type="string">/^\/favicon\.ico$/</item>
+                </argument>
+                <argument name="fileExtensions" xsi:type="array">
+                    <item name="jpg" xsi:type="string">.jpg</item>
+                    <item name="jpeg" xsi:type="string">.jpeg</item>
+                    <item name="png" xsi:type="string">.png</item>
+                    <item name="gif" xsi:type="string">.gif</item>
+                    <item name="bmp" xsi:type="string">.bmp</item>
+                    <item name="svg" xsi:type="string">.svg</item>
+                    <item name="webp" xsi:type="string">.webp</item>
+                    <item name="ico" xsi:type="string">.ico</item>
+                    <item name="css" xsi:type="string">.css</item>
+                    <item name="js" xsi:type="string">.js</item>
+                    <item name="pdf" xsi:type="string">.pdf</item>
+                    <item name="doc" xsi:type="string">.doc</item>
+                    <item name="docx" xsi:type="string">.docx</item>
+                    <item name="xls" xsi:type="string">.xls</item>
+                    <item name="xlsx" xsi:type="string">.xlsx</item>
+                    <item name="ppt" xsi:type="string">.ppt</item>
+                    <item name="pptx" xsi:type="string">.pptx</item>
+                    <item name="zip" xsi:type="string">.zip</item>
+                    <item name="rar" xsi:type="string">.rar</item>
+                    <item name="7z" xsi:type="string">.7z</item>
+                    <item name="gz" xsi:type="string">.gz</item>
+                    <item name="tar" xsi:type="string">.tar</item>
+                    <item name="mp3" xsi:type="string">.mp3</item>
+                    <item name="mp4" xsi:type="string">.mp4</item>
+                    <item name="avi" xsi:type="string">.avi</item>
+                    <item name="mov" xsi:type="string">.mov</item>
+                    <item name="woff" xsi:type="string">.woff</item>
+                    <item name="woff2" xsi:type="string">.woff2</item>
+                    <item name="ttf" xsi:type="string">.ttf</item>
+                    <item name="eot" xsi:type="string">.eot</item>
+                    <item name="html" xsi:type="string">.html</item>
+                    <item name="xml" xsi:type="string">.xml</item>
+                    <item name="php" xsi:type="string">.php</item>
+                    <item name="json" xsi:type="string">.json</item>
+                </argument>
+                <argument name="excludeUrls" xsi:type="array">
+                    <item name="checkout" xsi:type="string">checkout</item>
+                    <item name="uploads" xsi:type="string">uploads</item>
+                    <item name="pub" xsi:type="string">pub</item>
+                    <item name="customer" xsi:type="string">customer</item>
+                    <item name="static" xsi:type="string">static</item>
+                    <item name="customer_section" xsi:type="string">customer/section</item>
+                </argument>
+        </arguments>
+    </type>
+
+    <type name="Goat\TheCacheWarmer\Service\QueueMessageChecker">
+        <arguments>
+            <argument name="logger" xsi:type="object">Goat\TheCacheWarmer\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <type name="Goat\TheCacheWarmer\Plugin\CacheFlushPlugin">
+        <arguments>
+            <argument name="logger" xsi:type="object">Goat\TheCacheWarmer\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <type name="Goat\TheCacheWarmer\Service\LockManager">
+        <arguments>
+            <argument name="logger" xsi:type="object">Goat\TheCacheWarmer\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <type name="Goat\TheCacheWarmer\Logger\Logger">
+        <arguments>
+           <argument name="name" xsi:type="string">TheCacheWarmerHandler</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Goat\TheCacheWarmer\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Console Command Registration -->
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="cache:warmer:manual" xsi:type="object">Goat\TheCacheWarmer\Console\WarmupCommand</item>
+                <item name="cache:warmer:sitemap" xsi:type="object">Goat\TheCacheWarmer\Console\WarmupFromSitemapCommand</item>
+                    <item name="cache:warmup:release-lock" xsi:type="object">Goat\TheCacheWarmer\Console\ReleaseLockCommand</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Fastly Purge Cache Plugin -->
+    <type name="Fastly\Cdn\Model\PurgeCache">
+        <plugin name="fastly_purge_cache_plugin" type="Goat\TheCacheWarmer\Plugin\FastlyPurgeCachePlugin" sortOrder="10" />
+    </type>
+
+    <type name="Magento\Framework\App\Cache\TypeList">
+        <plugin name="cache_clean_plugin" type="Goat\TheCacheWarmer\Plugin\CacheFlushPlugin" sortOrder="10" />
+    </type>
+</config>

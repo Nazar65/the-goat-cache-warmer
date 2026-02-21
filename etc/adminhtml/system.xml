@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) 2026 TheGoat team. All rights reserved.
+ * See https://example.com/license for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="goat_cache_warmer" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Cache Warmer</label>
+            <tab>advanced</tab>
+            <resource>Goat_TheCacheWarmer::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Configuration</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable Cache Warmer</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="python_path" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Python Executable Path</label>
+                    <comment>Full path to python executable (e.g., /usr/bin/python3)</comment>
+                </field>
+                <field id="config_option" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Config Option</label>
+                    <comment>Configuration file for Python script (--json-config parameter). Upload a JSON configuration file (e.g., myconfig.json)</comment>
+                    <backend_model>Goat\TheCacheWarmer\Model\JsonFileType</backend_model>
+                    <upload_dir config="system" scope_info="1">cacheWarmerConfig</upload_dir>
+                </field>
+                <field id="preview_config" translate="label" type="button" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Preview Config File</label>
+                    <frontend_model>Goat\TheCacheWarmer\Block\Adminhtml\System\Config\Form\Field\PreviewButton</frontend_model>
+                </field>
+                <field id="csv_files" translate="label" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>CSV File</label>
+                    <comment>Upload custom CSV file for cache warming. Supported format: .csv</comment>
+                    <backend_model>Goat\TheCacheWarmer\Model\CsvFileType</backend_model>
+                    <upload_dir config="system" scope_info="1">cacheWarmerCsvFiles</upload_dir>
+                </field>
+                <field id="timeout" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Timeout (seconds)</label>
+                    <comment>Maximum time in seconds to wait for warming process</comment>
+                </field>
+                <field id="threads" translate="label" type="text" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Threads Count</label>
+                    <comment>Number of threads to use for cache warming (default: 5)</comment>
+                </field>
+                <field id="use_threads" translate="label" type="select" sortOrder="67" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Use Threads</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable or disable thread behavior. If disabled, --without-threads flag will be used.</comment>
+                </field>
+                <field id="delay" translate="label" type="text" sortOrder="67" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Delay (seconds)</label>
+                    <comment>Delay in seconds after flushing cache before cache warming to allow cache systems like Fastly to clear properly (default: 0)</comment>
+                </field>
+                <field id="lock_timeout" translate="label" type="text" sortOrder="68" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Lock Timeout (seconds)</label>
+                    <comment>Maximum time in seconds to wait before releasing a stale cache warmup lock</comment>
+                </field>
+                <field id="rate_limit" translate="label" type="text" sortOrder="69" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Rate Limit (URLs per minute)</label>
+                    <comment>Maximum number of URLs to warm up per minute. 0 = no rate limit</comment>
+                </field>
+                <field id="log_file_path" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                  <label>Nginx Access Log Path</label>
+                    <comment>Path to nginx access log file (e.g., /var/log/nginx/access.log). This path is store-specific.</comment>
+                </field>
+                <field id="log_pattern" translate="label" type="text" sortOrder="71" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Log File Pattern</label>
+                    <comment>Pattern to match log entries (e.g., \"GET /products/.*\"). This is used for parsing access logs.</comment>
+                </field>
+                <field id="log_include_base_domain" translate="label" type="select" sortOrder="72" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Include Base Domain in Log Parsing</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If enabled, base domain URL will be included when parsing nginx logs. (Enable this only if you modified default nginx log format!)</comment>
+                </field>
+                <field id="ignored_user_agents" translate="label tooltip comment" type="text" sortOrder="73" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Ignored User Agents</label>
+                    <frontend_model>Goat\TheCacheWarmer\Block\Adminhtml\Config\Form\Field\IgnoredUserAgent</frontend_model>
+                    <backend_model>Goat\TheCacheWarmer\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment><![CDATA[User agents that will be excluded from warming. When using nginx log warmup]]></comment>
+                </field>
+            </group>
+            <group id="cron" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Cron Configuration</label>
+                <field id="from_config_schedule" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Schedule For warming from admin uploade csv file</label>
+                    <comment>CRON expression for how often to generate CSV files and warm cache (default: 0 2 * * *)</comment>
+                </field>
+                <field id="from_nginx_schedule" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Schedule For Warming nginx logs top urls</label>
+                    <comment>CRON expression for how often to generate CSV files and warm cache (default: 0 2 * * *)</comment>
+                </field>
+                <field id="from_sitemap_schedule" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Schedule For Warming sitemaps source urls</label>
+                    <comment>CRON expression for how often to generate CSV files and warm cache (default: 0 2 * * *)</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
+

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) 2026 TheGoat team. All rights reserved.
+ * See https://example.com/license for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="goat_cache_warmer" frontName="goat_cache_warmer">
+            <module name="Goat_TheCacheWarmer" />
+        </route>
+    </router>
+</config>
+

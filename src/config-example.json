@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Guests Users tls website",
+    "website_base_url": "tls.magento.local",
+    "headers": {
+      "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36 (m_warmer) version 0.1",
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "Accept-Encoding": "gzip, deflate, br, zstd"
+    },
+    "cookies": {}
+  },
+  {
+    "name": "Logged In Users Second website",
+    "website_base_url": "second.magento.local",
+    "headers": {
+      "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36 (m_warmer) version 0.1",
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "Accept-Encoding": "gzip, deflate, br, zstd"
+    },
+    "cookies": {
+      "X-Magento-Vary": "971c13cfe954857624fdda8117228bd8f07b142dfbcd3cea77e2785a584a3666"
+    }
+  },
+  {
+    "name": "Guests Users all stores",
+    "website_base_url": "magento.local",
+    "headers": {
+      "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36 (m_warmer) version 0.1",
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "Accept-Encoding": "gzip, deflate, br, zstd"
+    },
+    "cookies": {}
+  }
+]

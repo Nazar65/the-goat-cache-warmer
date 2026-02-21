@@ -1,0 +1,380 @@
+{
+  "name": "The Chache Warmer Dashboard",
+  "description": null,
+  "permissions": "PUBLIC_READ_WRITE",
+  "pages": [
+    {
+      "guid": "Mjc2NzY4N3xWSVp8REFTSEJPQVJEfDQxNzAxNDEz",
+      "name": "The Chache Warmer Dashboard",
+      "description": null,
+      "widgets": [
+        {
+          "id": "508669496",
+          "title": "cache statuses by POP's",
+          "layout": {
+            "column": 1,
+            "row": 1,
+            "width": 8,
+            "height": 3
+          },
+          "linkedEntityGuids": [],
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "query": "FROM Log select count(*) where  request_user_agent NOT RLIKE r'^.*(GoogleOther|GoogleBot|bingbot|Applebot|facebookexternalhit|Googlebot|Amazonbot|meta-externalagen|AhrefsSiteAudit|SiteAuditBot|meta-externalads|NetworkingExtension|AdsBot-Google|okhttp|DuckAssistBot|DuckDuckGo|MojeekBot|AhrefsBot|Bazaarvoice).*'\nAND request_user_agent NOT RLIKE r'^.*(OAI-SearchBot|ChatGPT-User|FeedFetcher-Google|Dataprovider.com|AppleNewsBot|snapchat|Qwantbot|python-requests|m_warmer|iframely|Yeti|SeznamBot|SemrushBot|Pinterestbot).*'\nAND url NOT RLIKE r'^.*(track/shipment|burpee_quickaddtocart|rest/V1|.png|.ico|.jpg|customer|checkout|cart|sales|wesupply|wishlist|braintree).*' and project_id = {{project_id}} AND url NOT RLIKE r'^.*(customer|checkout|cart).*' since 24 hours ago timeseries 1 hour facet geo_datacenter, cache_status"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "id": "508911736",
+          "title": "Warmer cache status",
+          "layout": {
+            "column": 9,
+            "row": 1,
+            "width": 4,
+            "height": 3
+          },
+          "linkedEntityGuids": [],
+          "visualization": {
+            "id": "viz.stacked-bar"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "query": " FROM Log SELECT count(*) WHERE project_id={{project_id}}\nAND request_user_agent  LIKE '%m_warmer%'\nAND (cache_status='HIT' OR cache_status='MISS')\nFACET cache_state TIMESERIES 1 hour SINCE 24 hours AGO"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            }
+          }
+        },
+        {
+          "id": "463816181",
+          "title": "MISS vs HIT Excluding bots",
+          "layout": {
+            "column": 1,
+            "row": 4,
+            "width": 8,
+            "height": 4
+          },
+          "linkedEntityGuids": [],
+          "visualization": {
+            "id": "viz.stacked-bar"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "query": "FROM Log SELECT count(*) WHERE project_id={{project_id}}\nAND url NOT LIKE '/static/%' AND url not like '%/elasticsuite/recommender/ajax%' AND url NOT LIKE '/images/%' AND URL NOT LIKE '%admin_18974%'\nAND request_user_agent NOT LIKE '%m_warmer%'\nAND request_user_agent NOT RLIKE r'^.*(GoogleOther|GoogleBot|bingbot|Applebot|facebookexternalhit|Googlebot|Amazonbot|meta-externalagen|_warmer|AhrefsSiteAudit|SiteAuditBot|meta-externalads|NetworkingExtension|AdsBot-Google|okhttp|DuckAssistBot|DuckDuckGo|MojeekBot|AhrefsBot|Bazaarvoice).*'\nAND request_user_agent NOT RLIKE r'^.*(OAI-SearchBot|ChatGPT-User|FeedFetcher-Google|Dataprovider.com|AppleNewsBot|snapchat|Qwantbot|python-requests|m_warmer|iframely|Yeti|SeznamBot|SemrushBot|Pinterestbot).*'\nAND url NOT RLIKE r'^.*(track/shipment|burpee_quickaddtocart|rest/V1|.png|.ico|.jpg|customer|checkout|cart|sales|wesupply|wishlist|braintree).*'\nAND content_type RLIKE r'^.*(text\\/html;charset=UTF-8|text\\/html;charset=utf-8|text\\/html; charset=UTF-8|text\\/html; charset=utf-8).*'\nAND url NOT RLIKE r'^.*(customer|checkout|cart).*'\nAND client_ip NOT IN ('3.19.191.88', '195.16.78.188', '3.23.199.63' , '3.135.96.200', '3.21.255.189')\nAND (cache_status='HIT' OR cache_status='MISS')\nFACET cache_state TIMESERIES 1 hour SINCE 24 hours AGO\n"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true
+            }
+          }
+        },
+        {
+          "id": "500486135",
+          "title": "Top requested ips",
+          "layout": {
+            "column": 9,
+            "row": 4,
+            "width": 4,
+            "height": 4
+          },
+          "linkedEntityGuids": [],
+          "visualization": {
+            "id": "viz.table"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "query": "FROM Log SELECT count(*) FACET  client_ip WHERE project_id={{project_id}}\nAND request_user_agent NOT LIKE '%m_warmer%'\nAND request_user_agent NOT RLIKE r'^.*(GoogleOther|GoogleBot|bingbot|Applebot|facebookexternalhit|Googlebot|Amazonbot|meta-externalagen|_warmer|AhrefsSiteAudit|SiteAuditBot|meta-externalads|NetworkingExtension|AdsBot-Google|okhttp|DuckAssistBot|DuckDuckGo|MojeekBot|AhrefsBot|Bazaarvoice).*'\nAND request_user_agent NOT RLIKE r'^.*(OAI-SearchBot|ChatGPT-User|FeedFetcher-Google|Dataprovider.com|AppleNewsBot|snapchat|Qwantbot|python-requests|m_warmer|iframely|Yeti|SeznamBot|SemrushBot|Pinterestbot).*'\nAND url NOT LIKE '/static/%' AND url NOT LIKE '/images/%'\nAND client_ip not in ('3.19.191.88', '195.16.78.188', '3.23.199.63', '3.135.96.200', '3.21.255.189')\nAND url NOT RLIKE r'^.*(track/shipment|/elasticsuite/recommender/ajax|burpee_quickaddtocart|rest/V1|.png|.ico|.jpg|customer|checkout|cart|sales|wesupply|wishlist|braintree).*'\nAND url NOT RLIKE r'^.*(customer|checkout|cart).*'\nAND url NOT RLIKE r'^.*(track/shipment|burpee_quickaddtocart|rest/V1|.png|.ico|.jpg|page_cache).*'\nAND content_type RLIKE r'^.*(text\\/html;charset=UTF-8|text\\/html;charset=utf-8|text\\/html; charset=UTF-8|text\\/html; charset=utf-8).*'\nAND cache_status='MISS' SINCE 5 minutes AGO UNTIL now  limit 2000 "
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "id": "497285456",
+          "title": "TTFB based on Transactions duration",
+          "layout": {
+            "column": 1,
+            "row": 8,
+            "width": 12,
+            "height": 3
+          },
+          "linkedEntityGuids": [],
+          "visualization": {
+            "id": "viz.area"
+          },
+          "rawConfiguration": {
+            "colors": {
+              "colorPalette": "consistent",
+              "seriesOverrides": [
+                {
+                  "color": "#ff7800",
+                  "seriesName": "p75_ttfb (75%)"
+                },
+                {
+                  "color": "#26a269",
+                  "seriesName": "p95_ttfb (95%)"
+                }
+              ]
+            },
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true,
+              "position": "bottom"
+            },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": true,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "query": "SELECT   percentile(duration, 75) AS p75_ttfb,  percentile(duration, 95) AS p95_ttfb FROM Transaction WHERE transactionType = 'Web' AND request.uri not RLIKE  r'^/admin_18974/.*' AND request.uri not RLIKE  r'^/checkout/.*' and request.uri not RLIKE  r'^/customer.*' AND request.uri not RLIKE  r'^/braintree/.*' AND request.uri not like '%/elasticsuite/recommender/ajax%' AND request.uri not RLIKE r'^mwesupply/.*' and request.uri NOT RLIKE r'^/sales/.*' AND request.uri not RLIKE  r'^/wishlist.*' AND request.method = 'GET'  AND name NOT LIKE '%/favicon%'  AND name NOT LIKE '%/robots.txt%'  AND name NOT LIKE '%/health%'  AND duration > 0  AND duration < 30 and request.headers.accept NOT LIKE '%warmer=1%'  AND httpResponseCode IN (200, 201, 202, 204)  AND appName={{project_id}}   SINCE  24 hours ago TIMESERIES 1 hour"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "tooltip": {
+              "mode": "all"
+            },
+            "units": {
+              "unit": "SECONDS"
+            }
+          }
+        },
+        {
+          "id": "463816277",
+          "title": "TTFB Alert condition Browser Interaction Not excluding bots and warmer",
+          "layout": {
+            "column": 1,
+            "row": 11,
+            "width": 12,
+            "height": 3
+          },
+          "linkedEntityGuids": [],
+          "visualization": {
+            "id": "viz.line"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "legend": {
+              "enabled": true
+            },
+            "markers": {
+              "displayedTypes": {
+                "criticalViolations": false,
+                "deployments": true,
+                "relatedDeployments": true,
+                "warningViolations": false
+              }
+            },
+            "nrqlQueries": [
+              {
+                "query": "FROM BrowserInteraction SELECT percentile(timeToResponseStart, 75) AS 'Back end (Time to first byte)' WHERE appName={{project_id}}  AND userAgentName = 'Chrome'  AND targetUrl NOT RLIKE r'^.*(customer|checkout|cart|admin|braintree|static|version|images|admin_18974|whishlist|shipment|rest|wesupply|page_cache|sales).*' SINCE 24 hours ago TIMESERIES 1 hour"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            },
+            "thresholds": {
+              "isLabelVisible": true,
+              "thresholds": [
+                {
+                  "from": 0.2,
+                  "name": "TTFB green zone",
+                  "severity": "success",
+                  "to": 1
+                },
+                {
+                  "from": 1.2,
+                  "name": "RED TTFB",
+                  "severity": "critical",
+                  "to": 3.3
+                }
+              ]
+            },
+            "yAxisLeft": {
+              "zero": true
+            },
+            "yAxisRight": {
+              "zero": true
+            }
+          }
+        },
+        {
+          "id": "463816179",
+          "title": "MISS URLS Excluding bots",
+          "layout": {
+            "column": 1,
+            "row": 14,
+            "width": 12,
+            "height": 8
+          },
+          "linkedEntityGuids": [],
+          "visualization": {
+            "id": "viz.table"
+          },
+          "rawConfiguration": {
+            "dataFormatters": [
+              {
+                "name": "client_ip",
+                "precision": null,
+                "type": "decimal"
+              }
+            ],
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "query": "FROM Log SELECT url,status, request_user_agent,client_ip, geo_country_code, request_x_magento_vary, cache_status_custom, cache_state, geo_datacenter, request_accept_encoding, request_vcl_generation, request_fastly_ssl WHERE project_id={{project_id}}\nAND request_user_agent NOT LIKE '%m_warmer%'\nAND cache_state ='MISS, MISS, MISS' or cache_state ='MISS, MISS'or cache_state = 'MISS'\nAND request_user_agent NOT RLIKE r'^.*(GoogleOther|GoogleBot|bingbot|Applebot|facebookexternalhit|Googlebot|Amazonbot|meta-externalagen|_warmer|AhrefsSiteAudit|SiteAuditBot|meta-externalads|NetworkingExtension|AdsBot-Google|okhttp|DuckAssistBot|DuckDuckGo|MojeekBot|AhrefsBot|Bazaarvoice).*'\nAND request_user_agent NOT RLIKE r'^.*(OAI-SearchBot|ChatGPT-User|FeedFetcher-Google|Dataprovider.com|AppleNewsBot|snapchat|Qwantbot|python-requests|m_warmer|iframely|Yeti|SeznamBot|SemrushBot|Pinterestbot|Google-PageRenderer|GeedoShopProductFinder|Go-http-client|LinkCheck).*'\nAND url NOT LIKE '/static/%' AND url NOT LIKE '/images/%'\nAND client_ip NOT IN ('3.19.191.88', '195.16.78.188', '3.23.199.63' , '3.135.96.200', '3.21.255.189')\nAND url NOT RLIKE r'^.*(track/shipment|/elasticsuite/recommender/ajax|burpee_quickaddtocart|tracker|rest/V1|.png|.ico|.jpg|customer|checkout|cart|sales|wesupply|wishlist|braintree).*'\nAND url NOT RLIKE r'^.*(customer|checkout|cart).*'\nAND cache_status = 'MISS'\nAND url NOT RLIKE r'^.*(track/shipment|burpee_quickaddtocart|rest/V1|.png|.ico|.jpg|page_cache).*'\nAND content_type RLIKE r'^.*(text\\/html;charset=UTF-8|text\\/html;charset=utf-8|text\\/html; charset=UTF-8|text\\/html; charset=utf-8).*' SINCE 5 minutes AGO UNTIL now ORDER BY timestamp desc limit 2000 "
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        },
+        {
+          "id": "500371794",
+          "title": "Top MISSED Urls to prewarm with parameters",
+          "layout": {
+            "column": 1,
+            "row": 22,
+            "width": 12,
+            "height": 3
+          },
+          "linkedEntityGuids": [],
+          "visualization": {
+            "id": "viz.table"
+          },
+          "rawConfiguration": {
+            "facet": {
+              "showOtherSeries": false
+            },
+            "nrqlQueries": [
+              {
+                "query": "FROM Log SELECT count(*) FACET concat('https://www.burpee.com',url) as url WHERE project_id='j5axkcqyhe6rg'\nAND request_user_agent not like '%m_warmer%'\nAND request_user_agent NOT RLIKE r'^.*(GoogleOther|GoogleBot|bingbot|Applebot|facebookexternalhit|Googlebot|Amazonbot|meta-externalagen|_warmer|AhrefsSiteAudit|SiteAuditBot|meta-externalads|NetworkingExtension|AdsBot-Google|okhttp|DuckAssistBot|DuckDuckGo|MojeekBot|AhrefsBot|Bazaarvoice).*'\nAND request_user_agent NOT RLIKE r'^.*(OAI-SearchBot|ChatGPT-User|FeedFetcher-Google|Dataprovider.com|AppleNewsBot|snapchat|Qwantbot|python-requests|m_warmer|iframely|Yeti|SeznamBot|SemrushBot).*'\nAND url NOT LIKE '/static/%' AND url NOT LIKE '/images/%'\nAND url NOT RLIKE r'^.*(track/shipment|/elasticsuite/recommender/ajax|burpee_quickaddtocart|rest/V1|.png|.ico|.jpg|customer|checkout|cart|sales|wesupply|wishlist|braintree).*'\nAND url NOT RLIKE r'^.*(customer|checkout|cart).*'\nAND url NOT RLIKE r'^.*(track/shipment|burpee_quickaddtocart|rest/V1|.png|.ico|.jpg|page_cache).*'\nAND content_type RLIKE r'^.*(text\\/html;charset=UTF-8|text\\/html;charset=utf-8|text\\/html; charset=UTF-8|text\\/html; charset=utf-8).*'\nAND cache_state = 'MISS, MISS, MISS' or cache_state = 'MISS, MISS' or cache_state ='MISS' SINCE 24 hours ago LIMIT 2000"
+              }
+            ],
+            "platformOptions": {
+              "ignoreTimeRange": false
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "name": "project_id",
+      "items": [
+        {
+          "title": null,
+          "value": "production"
+        },
+        {
+          "title": null,
+          "value": "staging"
+        }
+      ],
+      "defaultValues": [
+        {
+          "value": {
+            "string": "production"
+          }
+        }
+      ],
+      "nrqlQuery": null,
+      "options": {
+        "excluded": false
+      },
+      "title": "ProjectID",
+      "type": "ENUM",
+      "isMultiSelection": false,
+      "replacementStrategy": "STRING"
+    }
+  ]
+}
