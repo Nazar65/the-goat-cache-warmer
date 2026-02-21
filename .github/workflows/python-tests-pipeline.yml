@@ -23,4 +23,5 @@ jobs:
           pip install requests
       - name: Run tests with pytest
         run: |
+          ls -la ${{ github.workspace }}
           python -m unittest ${{ github.workspace }}/src/tests/test_warmer.py -v
