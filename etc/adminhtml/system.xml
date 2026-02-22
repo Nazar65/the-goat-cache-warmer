@@ -63,9 +63,13 @@
                     <label>Rate Limit (URLs per minute)</label>
                     <comment>Maximum number of URLs to warm up per minute. 0 = no rate limit</comment>
                 </field>
+            </group>
+            <group id="nginx_log_parsing" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Nginx Log Parsing Configuration</label>
                 <field id="log_file_path" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                   <label>Nginx Access Log Path</label>
-                    <comment>Path to nginx access log file (e.g., /var/log/nginx/access.log). This path is store-specific.</comment>
+                    <comment>Path to nginx access log file (e.g., /var/log/nginx/access.log). For Magento Cloud instances, the nginx access log file location may differ from the standard path. Instead of `/var/log/nginx/access.log`, you might need to use `/var/log/platform/project_id/access.log` where `project_id` is your specific project identifier. Ensure that the configured log path matches your environment's actual log file location.
+</comment>
                 </field>
                 <field id="log_pattern" translate="label" type="text" sortOrder="71" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Log File Pattern</label>

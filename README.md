@@ -308,7 +308,7 @@ If you need to add a specific or custom sitemap URL:
 1. Go to Content > Design > Configuration
 2. Select your theme and click Edit
 3. Under Search Engine Robots, find the Edit custom instruction of robots.txt File field
-4. Add Sitemap: [your-sitemap-url] (e.g., Sitemap: https://example.com/pub/sitemap.xml) to the field
+4. Add Sitemap: [your-sitemap-url] (e.g., Sitemap: <https://example.com/pub/sitemap.xml>) to the field
 5. Save the configuration
 
 ## Usage
@@ -399,6 +399,8 @@ All operations are logged to `/var/log/the_cache_warmer.log`. The logs include:
 - Proper permissions on nginx access log files
 
 > **Note**: In most hosting environments, Python 3 is already installed by default. If it's not available, you'll need to install it via your system's package manager (e.g., `apt-get install python3` on Debian/Ubuntu or `yum install python3` on CentOS/RHEL). The `requests` library is required and can be installed using pip: `pip3 install requests`.
+
+> **Magento Cloud Note**: For Magento Cloud instances, the nginx access log file location may differ from the standard path. Instead of `/var/log/nginx/access.log`, you might need to use `/var/log/platform/project_id/access.log` where `project_id` is your specific project identifier. Ensure that the configured log path matches your environment's actual log file location.
 
 ## Ignored User Agents Feature
 

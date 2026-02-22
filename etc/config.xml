@@ -18,10 +18,12 @@
                 <delay>120</delay>
                 <lock_timeout>3600</lock_timeout>
                 <rate_limit>0</rate_limit>
+            </general>
+            <nginx_log_parsing>
+                <ignored_user_agents>{"_1771691296441_441":{"regex_expression":"\/.*GoogleBot.*\/"},"_1771692382840_840":{"regex_expression":"\/.*BingBot.*\/"}}</ignored_user_agents>
                 <log_pattern>/^.*?"GET\s+(\/[^\s]*)\s+HTTP\/.*?\s+(\d+)\s+.*$/m</log_pattern>
                 <log_include_base_domain>0</log_include_base_domain>
-                <ignored_user_agents>{"_1771691296441_441":{"regex_expression":"\/.*GoogleBot.*\/"},"_1771692382840_840":{"regex_expression":"\/.*BingBot.*\/"}}</ignored_user_agents>
-            </general>
+            </nginx_log_parsing>
         </goat_cache_warmer>
     </default>
 </config>

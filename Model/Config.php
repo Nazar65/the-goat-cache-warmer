@@ -23,14 +23,14 @@ class Config
     public const CONFIG_PATH_USE_THREADS = 'goat_cache_warmer/general/use_threads';
     public const CONFIG_PATH_DELAY = 'goat_cache_warmer/general/delay';
     public const CONFIG_PATH_CRON_SCHEDULE = 'goat_cache_warmer/cron/schedule';
-    public const CONFIG_PATH_LOG_FILE_PATH = 'goat_cache_warmer/general/log_file_path';
+    public const CONFIG_PATH_LOG_FILE_PATH = 'goat_cache_warmer/nginx_log_parsing/log_file_path';
     public const CONFIG_FOLDER_NAME = 'cacheWarmerConfig';
     public const CSV_SOURCE_FOLDER_NAME = 'cacheWarmerCsvFiles';
     public const CONFIG_PATH_LOCK_TIMEOUT = 'goat_cache_warmer/general/lock_timeout';
     public const CONFIG_PATH_RATE_LIMIT = 'goat_cache_warmer/general/rate_limit';
-    public const CONFIG_PATH_LOG_PATTERN = 'goat_cache_warmer/general/log_pattern';
-    public const CONFIG_PATH_LOG_INCLUDE_BASE_DOMAIN = 'goat_cache_warmer/general/log_include_base_domain';
-    public const CONFIG_PATH_IGNORED_USER_AGENTS = 'goat_cache_warmer/general/ignored_user_agents';
+    public const CONFIG_PATH_LOG_PATTERN = 'goat_cache_warmer/nginx_log_parsing/log_pattern';
+    public const CONFIG_PATH_LOG_INCLUDE_BASE_DOMAIN = 'goat_cache_warmer/nginx_log_parsing/log_include_base_domain';
+    public const CONFIG_PATH_IGNORED_USER_AGENTS = 'goat_cache_warmer/nginx_log_parsing/ignored_user_agents';
 
     /**
      * @param ScopeConfigInterface $scopeConfig
@@ -92,7 +92,7 @@ class Config
      */
     public function getTimeout(int $storeId = null): string
     {
-        return (string) $this->scopeConfig->getValue(self::CONFIG_PATH_LOCK_TIMEOUT, 'store', $storeId);
+        return (string) $this->scopeConfig->getValue(self::CONFIG_PATH_TIMEOUT, 'store', $storeId);
     }
 
     /**
